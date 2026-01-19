@@ -1,83 +1,81 @@
-document.addEventListener("DOMContentLoaded", () => {
+const burger = document.getElementById("burger");
+const mobileMenu = document.getElementById("mobileMenu");
 
-  // MOBILE MENU
-  const burger = document.getElementById("burger");
-  const mobileMenu = document.getElementById("mobileMenu");
-  burger.addEventListener("click", () => {
-    mobileMenu.classList.toggle("open");
-  });
+burger.addEventListener("click", () => {
+  mobileMenu.classList.toggle("open");
+});
 
-  // MODAL
-  const modal = document.getElementById("modal");
-  const testDriveBtn = document.getElementById("testDriveBtn");
-  const testDriveBtn2 = document.getElementById("testDriveBtn2");
-  const closeModal = document.getElementById("closeModal");
+const modal = document.getElementById("modal");
+const closeModal = document.getElementById("closeModal");
+const testDriveBtn = document.getElementById("testDriveBtn");
+const testDriveBtn2 = document.getElementById("testDriveBtn2");
+const contactBtn = document.getElementById("contactBtn");
 
-  testDriveBtn.addEventListener("click", () => modal.style.display = "flex");
-  testDriveBtn2.addEventListener("click", () => modal.style.display = "flex");
-  closeModal.addEventListener("click", () => modal.style.display = "none");
+function openModal() {
+  modal.style.display = "block";
+}
 
-  window.addEventListener("click", (e) => {
-    if (e.target === modal) modal.style.display = "none";
-  });
+function closeModalFunc() {
+  modal.style.display = "none";
+}
 
-  // LUXURY SCROLL
-  const fadeElems = document.querySelectorAll(".luxury-section");
+testDriveBtn.addEventListener("click", openModal);
+testDriveBtn2.addEventListener("click", openModal);
+contactBtn.addEventListener("click", openModal);
+closeModal.addEventListener("click", closeModalFunc);
 
-  function showOnScroll() {
-    fadeElems.forEach(el => {
-      const rect = el.getBoundingClientRect();
-      if (rect.top < window.innerHeight - 150) {
-        el.classList.add("visible");
-      }
-    });
+window.addEventListener("click", (e) => {
+  if (e.target === modal) {
+    closeModalFunc();
   }
+});
 
-  window.addEventListener("scroll", showOnScroll);
-  showOnScroll();
+const colorWheel = document.getElementById("colorWheel");
+const brightness = document.getElementById("brightness");
+const saturation = document.getElementById("saturation");
+const previewCar = document.getElementById("previewCar");
+const randomColor = document.getElementById("randomColor");
 
-  // STYLE CREATOR
-  const brightness = document.getElementById("brightness");
-  const saturation = document.getElementById("saturation");
-  const previewCar = document.getElementById("previewCar");
-  const randomColor = document.getElementById("randomColor");
+function applyColor() {
+  const bright = brightness.value;
+  const sat = saturation.value;
 
-  function applyColor() {
-    const bright = brightness.value;
-    const sat = saturation.value;
-    previewCar.style.filter = brightness(${bright}%) saturate(${sat}%);
-  }
+  previewCar.style.filter = brightness(${bright}%) saturate(${sat}%);
+}
 
-  brightness.addEventListener("input", applyColor);
-  saturation.addEventListener("input", applyColor);
+colorWheel.addEventListener("input", applyColor);
+brightness.addEventListener("input", applyColor);
+saturation.addEventListener("input", applyColor);
 
-  randomColor.addEventListener("click", () => {
-    const randomHex = '#' + Math.floor(Math.random()*16777215).toString(16);
-    document.getElementById("colorWheel").value = randomHex;
-    applyColor();
-  });
-
+randomColor.addEventListener("click", () => {
+  const randomHex = "#" + Math.floor(Math.random()*16777215).toString(16);
+  colorWheel.value = randomHex;
   applyColor();
+});
 
-  // TIMER
-  const timer = document.getElementById("timer");
-  const endDate = new Date();
-  endDate.setDate(endDate.getDate() + 7);
+const timer = document.getElementById("timer");
 
-  function updateTimer() {
+function startTimer() {
+  const target = new Date();
+  target.setDate(target.getDate() + 7);
+
+  const interval = setInterval(() => {
     const now = new Date();
-    const diff = endDate - now;
+    const diff = target - now;
+
     if (diff <= 0) {
-      timer.innerText = "Серия завершена";
+      clearInterval(interval);
+      timer.innerText = "Серия закрыта";
       return;
     }
-    const d = Math.floor(diff / (1000*60*60*24));
-    const h = Math.floor((diff / (1000*60*60)) % 24);
-    const m = Math.floor((diff / (1000*60)) % 60);
-    const s = Math.floor((diff / 1000) % 60);
-    timer.innerText = ${d}д ${h}ч ${m}м ${s}с;
-  }
-  setInterval(updateTimer, 1000);
-  updateTimer();
 
-});
+    const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+    const hours = Math.floor((diff / (1000 * 60 * 60)) % 24);
+    const mins = Math.floor((diff / (1000 * 60)) % 60);
+    const secs = Math.floor((diff / 1000) % 60);
+
+    timer.innerText = ${days}д ${hours}ч ${mins}м ${secs}с;
+  }, 1000);
+}
+
+startTimer();
